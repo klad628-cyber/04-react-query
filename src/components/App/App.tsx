@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import ReactPaginate from "react-paginate";
 import toast, { Toaster } from "react-hot-toast";
 
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
@@ -13,17 +14,16 @@ import styles from "./App.module.css";
 
 const App = () => {
   const [query, setQuery] = useState("");
+  const [page, setPage] = useState(1);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const {
-    data: movies = [],
-    isPending,
-    isError,
-  } = useQuery({
-    queryKey: ["movies", query],
-    queryFn: () => fetchMovies(query),
+  const { data, isPending, isFetching, isSuccess, isError } = useQuery({
+    queryKey: ["movies", query, page],
+    queryFn: () => fetchMovies(query, page),
     enabled: Boolean(query),
+    placeholderData: keepPreviousData,
   });
+  const movies = data?.results ?? [];
 
   useEffect(() => {
     if (isError) {
@@ -32,14 +32,20 @@ const App = () => {
   }, [isError]);
 
   useEffect(() => {
-    if (!isPending && !isError && query && movies.length === 0) {
+    if (isSuccess && query && movies.length === 0) {
       toast.error("No movies found for your request.");
     }
-  }, [isError, isPending, movies.length, query]);
+  }, [isSuccess, movies.length, query]);
 
   const handleSearch = (nextQuery: string) => {
     setSelectedMovie(null);
+    setPage(1);
     setQuery(nextQuery);
+  };
+
+  const handlePageChange = ({ selected }: { selected: number }) => {
+    setPage(selected + 1);
+    setSelectedMovie(null);
   };
 
   return (
@@ -47,13 +53,43 @@ const App = () => {
       <SearchBar onSubmit={handleSearch} />
 
       <main className={styles.main}>
-        {isPending ? (
+        {isPending && !data ? (
           <Loader />
         ) : isError ? (
           <ErrorMessage />
-        ) : movies.length > 0 ? (
-          <MovieGrid movies={movies} onSelect={setSelectedMovie} />
-        ) : null}
+        ) : (
+          <>
+            {movies.length > 0 ? (
+              <MovieGrid movies={movies} onSelect={setSelectedMovie} />
+            ) : null}
+
+            {isSuccess && data.total_pages > 1 ? (
+              <ReactPaginate
+                breakLabel="..."
+                nextLabel=">"
+                onPageChange={handlePageChange}
+                pageRangeDisplayed={5}
+                pageCount={data.total_pages}
+                previousLabel="<"
+                renderOnZeroPageCount={null}
+                forcePage={page - 1}
+                containerClassName={styles.pagination}
+                pageClassName={styles.pageItem}
+                pageLinkClassName={styles.pageLink}
+                previousClassName={styles.pageItem}
+                previousLinkClassName={styles.pageLink}
+                nextClassName={styles.pageItem}
+                nextLinkClassName={styles.pageLink}
+                breakClassName={styles.pageItem}
+                breakLinkClassName={styles.pageLink}
+                activeClassName={styles.activePage}
+                disabledClassName={styles.disabledPage}
+              />
+            ) : null}
+
+            {isFetching ? <Loader /> : null}
+          </>
+        )}
       </main>
 
       {selectedMovie ? (

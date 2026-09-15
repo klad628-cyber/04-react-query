@@ -14,7 +14,8 @@
     "modern-normalize": "^3.0.0",
     "react": "^19.3.0",
     "react-dom": "^19.3.0",
-    "react-hot-toast": "^2.4.1"
+    "react-hot-toast": "^2.4.1",
+    "react-paginate": "^8.3.0"
   },
   "devDependencies": {
     "@types/react": "^19.3.0",

@@ -4,6 +4,7 @@ import type { Movie } from "../types/movie";
 
 interface MovieSearchResponse {
   results: Movie[];
+  total_pages: number;
 }
 
 const tmdbToken =
@@ -23,15 +24,18 @@ const api = axios.create({
   },
 });
 
-export const fetchMovies = async (query: string): Promise<Movie[]> => {
+export const fetchMovies = async (
+  query: string,
+  page: number,
+): Promise<MovieSearchResponse> => {
   const response = await api.get<MovieSearchResponse>("/search/movie", {
     params: {
       query,
       include_adult: false,
       language: "en-US",
-      page: 1,
+      page,
     },
   });
 
-  return response.data.results ?? [];
+  return response.data;
 };
