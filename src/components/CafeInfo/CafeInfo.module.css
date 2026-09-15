@@ -1,0 +1,30 @@
+.container {
+  margin-bottom: 34px;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  color: #aa6c35;
+  font-size: 0.73rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.title {
+  margin: 0;
+  color: #2e241d;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.1rem, 7vw, 3.4rem);
+  font-weight: 500;
+  letter-spacing: 0;
+  line-height: 1.05;
+}
+
+.description {
+  max-width: 350px;
+  margin: 18px auto 0;
+  color: #75685e;
+  font-size: 1rem;
+  line-height: 1.6;
+}

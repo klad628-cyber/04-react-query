@@ -1,0 +1,12 @@
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`
+  }
+};
+
+fetch('https://api.themoviedb.org/3/movie/popular', options)
+  .then(res => res.json())
+  .then(data => console.log(data));
+  import.meta.env.VITE_TMDB_TOKEN

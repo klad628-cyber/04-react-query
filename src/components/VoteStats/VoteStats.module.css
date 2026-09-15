@@ -1,0 +1,44 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(80, 60, 44, 0.12);
+}
+
+.stat {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  color: #75685e;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+.stat strong {
+  color: #2e241d;
+  font-weight: 800;
+}
+
+.stat:last-child {
+  grid-column: 1 / -1;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 6px;
+  color: #5c8065;
+}
+
+.stat:last-child strong {
+  color: #5c8065;
+}
+
+@media (max-width: 420px) {
+  .container {
+    grid-template-columns: 1fr;
+  }
+
+  .stat:last-child {
+    grid-column: auto;
+  }
+}
